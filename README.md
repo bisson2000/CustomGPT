@@ -1,2 +1,2 @@
-# CustomGPT2
-Recreation of OpenAI Chat GPT 2
+# CustomGPT
+Recreation of OpenAI Chat GPT
