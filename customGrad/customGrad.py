@@ -28,14 +28,14 @@ class Value:
 
         return out
     
-    def __radd__(self, other) -> Value:
-        return self * other
+    def __radd__(self, other): # other + self
+        return self + other
 
     def __sub__(self, other) -> Value:
         return self + (-other)
     
-    def __rsub__(self, other) -> Value:
-        return self - other
+    def __rsub__(self, other): # other - self
+        return other + (-self)
 
     def __mul__(self, other) -> Value:
         other = other if isinstance(other, Value) else Value(other)
@@ -47,15 +47,15 @@ class Value:
         out._backward = _backward
 
         return out
-    
-    def __rmul__(self, other) -> Value:
+
+    def __rmul__(self, other): # other * self
         return self * other
     
-    def __div__(self, other) -> Value:
-        return self * other ** -1
-    
-    def __rdiv__(self, other) -> Value:
-        return self / other
+    def __truediv__(self, other): # self / other
+        return self * other**-1
+
+    def __rtruediv__(self, other): # other / self
+        return other * self**-1
     
     def __neg__(self):
         return self * -1
