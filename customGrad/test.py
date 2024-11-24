@@ -82,12 +82,12 @@ L.backward()
 #print(L)
 #draw_dot(L).view()
 
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.5
 
-a.data += LEARNING_RATE * a.grad
-b.data += LEARNING_RATE * b.grad
-c.data += LEARNING_RATE * c.grad
-f.data += LEARNING_RATE * f.grad
+#a.data += LEARNING_RATE * a.grad
+#b.data += LEARNING_RATE * b.grad
+#c.data += LEARNING_RATE * c.grad
+#f.data += LEARNING_RATE * f.grad
 
 
 #x = [2.0, 3.0]
@@ -110,7 +110,7 @@ y_preds = [n(x)[0] for x in xs]
 print("predictions")
 print(y_preds)
 
-losses = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
+losses: list[Value] = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
 #print("Individual mean squared losses")
 #print(losses)
 
@@ -143,7 +143,30 @@ y_preds = [n(x)[0] for x in xs]
 print("new predictions")
 print(y_preds)
 
-losses = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
+losses: list[Value] = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
 loss = sum(losses)
 print("New loss, should be lower")
 print(loss)
+
+# training loop
+for k in range(100):
+    # forward pass
+    y_preds = [n(x)[0] for x in xs]
+    
+    # evaluate loss
+    loss: Value = sum((y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds))
+    
+    # flush the grad (zero grad)
+    for p in n.parameters():
+        p.grad = 0.0
+    
+    # backwards pass
+    loss.backward()
+    
+    # update parameters
+    for p in n.parameters():
+        p.data += -1.0 * LEARNING_RATE * p.grad
+    
+    print("Iteration ", k, loss.data)
+
+print("Final predictions: ", y_preds)
