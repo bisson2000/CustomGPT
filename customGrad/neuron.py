@@ -20,8 +20,14 @@ class Layer:
         outs = [n(x) for n in self.neurons]
         return outs
 
+class MLP:
+    def __init__(self, nin, nout_list):
+        size = [nin] + nout_list
+        self.layers = [Layer(size[i], size[i + 1]) for i in range(len(nout_list))]
 
-
-
+    def __call__(self, x):
+        for layer in self.layers:
+            x = layer(x)
+        return x
 
 

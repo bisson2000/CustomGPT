@@ -93,12 +93,11 @@ class Value:
         topo: list[Value] = []
         visited = set()
         def build_topological_sort(v: Value):
-            if v in visited:
-                return
-            visited.add(v)
-            for child in v._prev:
-                build_topological_sort(child)
-            topo.append(v)
+            if v not in visited:
+                visited.add(v)
+                for child in v._prev:
+                    build_topological_sort(child)
+                topo.append(v)
         
         build_topological_sort(self)
         self.grad = 1.0

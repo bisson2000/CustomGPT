@@ -1,5 +1,5 @@
 from customGrad import Value
-from neuron import Neuron, Layer
+from neuron import Neuron, Layer, MLP
 from graphviz import Digraph
 
 # Visualization helper
@@ -79,7 +79,7 @@ L.grad = 1.0
 
 L.backward()
 
-print(L)
+#print(L)
 #draw_dot(L).view()
 
 LEARNING_RATE = 0.01
@@ -90,6 +90,33 @@ c.data += LEARNING_RATE * c.grad
 f.data += LEARNING_RATE * f.grad
 
 
-x = [2.0, 3.0]
-n = Layer(2, 3)
-n(x)
+#x = [2.0, 3.0]
+x = [2.0, 3.0, -1.0]
+#n = Layer(2, 3)
+#n = Neuron(2)
+n = MLP(len(x), [4, 4, 1]) # size x -> 4 neurons -> 4 neurons -> 1 output
+#print(n(x))
+#draw_dot(n(x)[0]).view()
+
+# Example of loss calculation
+xs = [
+    [2.0, 3.0, -1.0],
+    [3.0, -1.0, 0.5],
+    [0.5, 1.0, 1.0],
+    [1.0, 1.0, -1.0],
+]
+y_truths = [1.0, -1.0, -1.0, 1.0] # desired targets
+y_preds = [n(x)[0] for x in xs]
+print("predictions")
+print(y_preds)
+
+losses = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
+print("Individual mean squared losses")
+print(losses)
+
+loss = sum(losses)
+print("Initial loss")
+print(loss)
+
+loss.backward()
+print(n.layers[0].neurons[0].w[0].grad)
