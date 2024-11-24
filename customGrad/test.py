@@ -111,12 +111,39 @@ print("predictions")
 print(y_preds)
 
 losses = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
-print("Individual mean squared losses")
-print(losses)
+#print("Individual mean squared losses")
+#print(losses)
 
 loss = sum(losses)
 print("Initial loss")
 print(loss)
 
 loss.backward()
+print("A weight's gradient")
 print(n.layers[0].neurons[0].w[0].grad)
+
+print("A weight's value")
+print(n.layers[0].neurons[0].w[0].data)
+
+#print("All parameters")
+#print(n.parameters())
+
+# Update parameters:
+# The gradient is a vector that points in the direction
+# of an increase in loss
+# if we follow this vector, we will increase the loss.
+# Hence the -1.0
+for p in n.parameters():
+    p.data += -1.0 * LEARNING_RATE * p.grad
+
+print("A weight's new value")
+print(n.layers[0].neurons[0].w[0].data)
+
+y_preds = [n(x)[0] for x in xs]
+print("new predictions")
+print(y_preds)
+
+losses = [(y_output - y_truth)**2 for y_truth, y_output in zip(y_truths, y_preds)]
+loss = sum(losses)
+print("New loss, should be lower")
+print(loss)
